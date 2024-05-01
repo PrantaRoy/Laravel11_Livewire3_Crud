@@ -24,7 +24,7 @@
                         <th>Action</th>
                     </thead>
                     <tbody>
-                        @foreach ($blogs as $blog)
+                        @foreach ($all_blogs as $blog)
                             <tr>
                                 <th scope="row">{{$loop->index+1}}</th>
                                 <td>{{$blog->title}}</td>
@@ -39,18 +39,21 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{$all_blogs->links()}}
             </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@push('scripts')
+
 <script>
     function deleteBlog(id){
         if(confirm("Are you sure to delete this blog?"))
-            window.livewire.emit('deleteBlog',id);
+        window.livewire.emit('delete_blog',id);
     }
 </script>
-@endpush
+</div>
+
+
+
 

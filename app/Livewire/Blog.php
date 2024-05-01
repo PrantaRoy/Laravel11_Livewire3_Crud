@@ -2,17 +2,20 @@
 
 namespace App\Livewire;
 
-use App\Models\Blog as BlogModel;
 use Livewire\Component;
+use Livewire\WithPagination;
+use App\Models\Blog as BlogModel;
 
 class Blog extends Component
 {
-
-    public $blogs, $id, $title , $description;
+    use WithPagination;
+    public $id ; 
+    public $title = '' ; 
+    public $description = '';
     public $updateBlog = false;
 
     protected $listeners = [
-        'deleteBlog'=>'destroy'
+        'delete_blog'
     ];
 
     protected $rules = [
@@ -47,7 +50,7 @@ class Blog extends Component
     }
 
 
-    public function updateBlog($id){
+    public function update_blog($id){
         $this->validate();
 
         try {
@@ -81,14 +84,14 @@ class Blog extends Component
 
     public function render()
     {
-        $this->blogs = BlogModel::with('user:id,name')->get();
-        return view('livewire.blog');
+        $all_blogs = BlogModel::with('user:id,name')->paginate(1);
+        return view('livewire.blog',compact('all_blogs'));
     }
 
 
-    public function destroy($id){
+    public function delete_blog($id){
         try {
-           BlogMode::find($id)->delete();
+           BlogModel::find($id)->delete();
            session()->flash('success',"Blog Deleted Successfully!!");
         } catch (\Throwable $th) {
             session()->flash('error',"Something goes wrong while deleting blog!!");
